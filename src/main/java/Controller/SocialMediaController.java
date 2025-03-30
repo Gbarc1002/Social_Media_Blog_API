@@ -29,6 +29,7 @@ public class SocialMediaController {
         Javalin app = Javalin.create();
         app.get("example-endpoint", this::exampleHandler);
         app.post("/register", this::registerHandler);
+        app.post("login", this::loginHandler);
 
         return app;
     }
@@ -41,12 +42,30 @@ public class SocialMediaController {
         context.json("sample text");
     }
 
+    /* Handler to register new accounts into database
+     * No repeating usernames, no blank usernames, 
+     * no password with less than 4 characters
+     */
     private void registerHandler(Context ctx) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         Account account = mapper.readValue(ctx.body(), Account.class);
         Account newAccount = accountService.addAccount(account);
         if (newAccount == null) {
             ctx.status(400);
+        } else {
+            ctx.status(200).json(mapper.writeValueAsString(newAccount));
+        }
+    }
+
+    /* Handler to get accounts from database using username and password
+     * 
+     */
+    private void loginHandler(Context ctx) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        Account account = mapper.readValue(ctx.body(), Account.class);
+        Account newAccount = accountService.loginAccount(account);
+        if (newAccount == null) {
+            ctx.status(401);
         } else {
             ctx.status(200).json(mapper.writeValueAsString(newAccount));
         }

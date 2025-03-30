@@ -12,20 +12,24 @@ import Util.ConnectionUtil;
 public class AccountDAO {
     
 
-    //Get Account by Username
+    /*Get Account by Username
     //  Input:    String username
     //  Output:   Account Object or null if it doesn't exist
+    */
     public Account getAccountByUsername(String username) {
         Connection connection = ConnectionUtil.getConnection();
         try {
-            String sql = "SELECT * FROM account WHERE ?";
+            String sql = "SELECT * FROM account WHERE username = ?";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, username);
             ResultSet rs = ps.executeQuery();
-            Account account = new Account(rs.getInt("account_id"), 
-                                        rs.getString("username"),
-                                        rs.getString("password"));
-            return account;
+            while (rs.next()) {
+                Account account = new Account(rs.getInt("account_id"), 
+                                            rs.getString("username"),
+                                            rs.getString("password"));
+                return account;
+            }
+            
         } catch (SQLException e) {
             // TODO: handle exception
             System.out.println(e.getMessage());
@@ -33,10 +37,11 @@ public class AccountDAO {
         return null;
     }
 
-    //Add new Account to database
+    /*Add new Account to database
     //  Input:  Account object
     //  Output: Same Account object with account_id if inserted correctly
     //          null if not inputted into database right
+    */
     public Account insertAccount(Account account) {
         Connection connection = ConnectionUtil.getConnection();
         try {
@@ -59,4 +64,31 @@ public class AccountDAO {
         }
         return null;
     }
+
+    /* Get Account By Username and Password
+     *  Input:  String username and password
+     *  Output: Account object from database or null
+     */
+    public Account loginAccount(String username, String password) {
+        Connection connection = ConnectionUtil.getConnection();
+        try {
+            String sql = "SELECT * FROM account WHERE username = ? AND password = ?";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, username);
+            ps.setString(2, password);
+
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()) {
+                Account account = new Account(  rs.getInt("account_id"),
+                                                rs.getString("username"),
+                                                rs.getString("password"));
+                return account;
+            }
+        } catch (SQLException e) {
+            // TODO: handle exception
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
+
 }

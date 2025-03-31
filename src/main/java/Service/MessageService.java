@@ -57,4 +57,20 @@ public class MessageService {
         }
         return message;
     }
+
+    /* Identify message from database based on message_id and updates text
+     * Will return new message object with revised message_text
+     * Will be null if it doesn't follow constraints
+     *  Constraints:    message_text is not blank or more than 255 characters
+     *                  message_id is found to be null and does not exist on table already
+     */
+    public Message updateMessage(int id, String text) {
+        Message message = messageDAO.searchByMessageID(id);
+        if (message == null || text.isBlank() || text.length() > 255) {
+            return null;
+        } else {
+            messageDAO.updateMessage(id, text);
+            return new Message(id, message.getPosted_by(), text, message.getTime_posted_epoch());
+        }
+    }
 }

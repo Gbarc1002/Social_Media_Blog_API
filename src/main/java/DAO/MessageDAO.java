@@ -104,7 +104,26 @@ public class MessageDAO {
             ps.executeUpdate();
         } catch (Exception e) {
             // TODO: handle exception
+            System.out.println(e.getMessage());
         }
     }
 
+    /* Updates the message table by identifying message_id and replacing new message_text
+     *  Input: int message_id, String message_text
+     *  Output: none
+     */ 
+    public void updateMessage(int id, String text) {
+        Connection connection = ConnectionUtil.getConnection();
+        try {
+            String sql = "UPDATE message SET message_text = ? WHERE message_id = ?";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, text);
+            ps.setInt(2, id);
+
+            ps.executeUpdate();
+        } catch (Exception e) {
+            // TODO: handle exception
+            System.out.println(e.getMessage());
+        }
+    }
 }

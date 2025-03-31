@@ -42,6 +42,7 @@ public class SocialMediaController {
         app.get("/messages/{message_id}", this::messageIDHandler);
         app.delete("/messages/{message_id}", this::deleteMessageHandler);
         app.patch("/messages/{message_id}", this::updateMessageHandler);
+        app.get("accounts/{account_id}/messages", this::messagesByAccountHandler);
 
         return app;
     }
@@ -143,5 +144,14 @@ public class SocialMediaController {
             ctx.status(400);
         } else 
             ctx.status(200).json(mapper.writeValueAsString(updatedMessage));
+    }
+
+    /* Handler to recieve all messages from database that have been posted by account_id
+     * Sends json of messages. Is empty if table has no records from account_id
+     */
+    private void messagesByAccountHandler(Context ctx) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        List<Message> messages = messageService.getMessagesFromAccount(Integer.valueOf(ctx.pathParam("account_id")));
+        ctx.status(200).json(mapper.writeValueAsString(messages));
     }
 }

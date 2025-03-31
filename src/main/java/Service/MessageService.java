@@ -73,4 +73,12 @@ public class MessageService {
             return new Message(id, message.getPosted_by(), text, message.getTime_posted_epoch());
         }
     }
+
+    /* Gets all messages from database that is sent from a particular account
+     * Does not need to check if account exists. 
+     * Will return empty if account does not exist or if table does not have a record with account_id
+     */
+    public List<Message> getMessagesFromAccount(int accountID) {
+        return messageDAO.messagesByAccount(accountID);
+    }
 }

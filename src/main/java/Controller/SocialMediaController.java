@@ -99,6 +99,6 @@ public class SocialMediaController {
     private void allMessageHandler(Context ctx) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         List<Message> messages = messageService.getAllMessages();
-        ctx.status(200).json(messages);
+        ctx.status(200).json(mapper.writeValueAsString(messages));
     }
 }

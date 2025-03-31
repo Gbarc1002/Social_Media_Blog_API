@@ -4,6 +4,7 @@ import Model.Account;
 import Model.Message;
 import Service.AccountService;
 import Service.MessageService;
+import java.util.List;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -34,6 +35,7 @@ public class SocialMediaController {
         app.post("/register", this::registerHandler);
         app.post("/login", this::loginHandler);
         app.post("/messages", this::postMessageHandler);
+        app.get("/messages", this::allMessageHandler);
 
         return app;
     }
@@ -88,5 +90,15 @@ public class SocialMediaController {
         } else {
             ctx.status(200).json(mapper.writeValueAsString(newMessage));
         }
+    }
+
+    /* Handler to get all messages from database
+     * No error codes should be needed
+     * Works even if table is empty
+     */
+    private void allMessageHandler(Context ctx) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        List<Message> messages = messageService.getAllMessages();
+        ctx.status(200).json(messages);
     }
 }

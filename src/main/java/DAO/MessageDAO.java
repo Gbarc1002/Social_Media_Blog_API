@@ -66,7 +66,7 @@ public class MessageDAO {
 
     /* Retrieves message based on message_id
      *  Input:  int message_id
-     *  Output: Message object, even if empty
+     *  Output: Message object or null
      */
     public Message searchByMessageID(int id) {
         Connection connection = ConnectionUtil.getConnection();
@@ -89,4 +89,22 @@ public class MessageDAO {
         }
         return message;
     }
+
+    /* Deletes message from table based on message_id
+     *  Input:  int message_id
+     *  Output: none
+     */
+    public void deleteMessage(int id) {
+        Connection connection = ConnectionUtil.getConnection();
+        try {
+            String sql = "DELETE FROM message WHERE message_id = ?";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, id);
+
+            ps.executeUpdate();
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+    }
+
 }

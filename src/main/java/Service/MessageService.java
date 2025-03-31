@@ -45,4 +45,16 @@ public class MessageService {
     public Message getMessageFromID(int id) {
         return messageDAO.searchByMessageID(id);
     }
+
+    /* Identify message from database based on message_id and deletes it
+     * Will return message object that should be identified from message_id before it gets deleted
+     * Returns null if it didn't exist prior. Does not need to run delete function if it doesn't exist already
+     */
+    public Message deleteMessage(int id) {
+        Message message = messageDAO.searchByMessageID(id);
+        if (message != null) {
+            messageDAO.deleteMessage(id);
+        }
+        return message;
+    }
 }

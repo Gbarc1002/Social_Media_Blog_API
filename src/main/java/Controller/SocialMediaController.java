@@ -4,6 +4,9 @@ import Model.Account;
 import Model.Message;
 import Service.AccountService;
 import Service.MessageService;
+
+import static org.mockito.ArgumentMatchers.nullable;
+
 import java.util.List;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -36,6 +39,7 @@ public class SocialMediaController {
         app.post("/login", this::loginHandler);
         app.post("/messages", this::postMessageHandler);
         app.get("/messages", this::allMessageHandler);
+        app.get("/messages/{message_id}", this::messageIDHandler);
 
         return app;
     }
@@ -101,4 +105,17 @@ public class SocialMediaController {
         List<Message> messages = messageService.getAllMessages();
         ctx.status(200).json(mapper.writeValueAsString(messages));
     }
+
+    /* Handler to get a message from database based on given message_id
+     * Will return message object or empty
+     */
+    private void messageIDHandler(Context ctx) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        Message message = messageService.getMessageFromID(Integer.valueOf(ctx.pathParam("message_id")));
+        if (message == null) {
+            ctx.status(200).result("");
+        } else 
+            ctx.status(200).json(mapper.writeValueAsString(message));
+    }
+        
 }

@@ -38,4 +38,11 @@ public class MessageService {
     public List<Message> getAllMessages() {
         return messageDAO.getAllMessages();
     }
+
+    /* Gets message from database from message_id
+     * Will return message object, even if empty
+     */
+    public Message getMessageFromID(int id) {
+        return messageDAO.searchByMessageID(id);
+    }
 }
